@@ -1,0 +1,12 @@
+---
+layout: default
+img: udem.png
+category: Services
+title: Open source
+description: |
+  <p class="lead">Blocks is a Theano toolkit developed by students and
+  researchers from the LISA machine learning laboratory of the
+  University of Montreal. It is completely open source, released under
+  an MIT license.</p>
+
+---
