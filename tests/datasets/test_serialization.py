@@ -5,7 +5,7 @@ import dill
 import numpy
 
 from blocks.datasets.streams import DataStream
-from blocks.datasets.mnist import MNIST
+from blocks.contrib.datasets.mnist import MNIST
 from blocks.datasets.schemes import SequentialScheme
 
 
