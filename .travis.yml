@@ -26,6 +26,7 @@ install:
 script:
   - |
       python setup.py install # Tests setup.py (should also install dill)
+      pip install git+git://github.com/bartvm/blocks-contrib.git
       # Must export environment variable so that the subprocess is aware of it
       export THEANO_FLAGS=floatX=$TESTS
       # Running nose2 within coverage makes imports count towards coverage
