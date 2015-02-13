@@ -39,6 +39,4 @@ setup(
         'plot': ['bokeh'],
         'docs': ['sphinx', 'sphinxcontrib-napoleon', 'sphinx-rtd-theme']
     },
-    dependency_links=['http://github.com/dwf/picklable_itertools/'
-                      'tarball/master#egg=picklable_itertools'],
     zip_safe=False)
