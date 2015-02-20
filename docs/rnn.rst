@@ -161,7 +161,14 @@ Here's how you can create a recurrent brick that encapsulate the two layers:
 ...     def get_dim(self, name):
 ...         return (self.dim if name in ('inputs', 'first_states', 'second_states')
 ...                 else super(FeedbackRNN, self).get_dim(name))
-...
+
+.. doctest::
+   :hidden:
+
+   >>> def __getstate__(self):
+   ...    return {}
+   >>> FeedbackRNN.__getstate__ = __getstate__
+
 >>> x = tensor.tensor3('x')
 >>> feedback = FeedbackRNN(dim=3)
 >>> feedback.initialize()
