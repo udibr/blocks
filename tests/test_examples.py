@@ -56,3 +56,8 @@ def test_reverse_words():
                 print("A line.", file=data)
         reverse_words_test("train", f_save.name, 1, False, [f_data.name])
     blocks.config.recursion_limit = old_limit
+
+if __name__ == "__main__":
+    test_mnist()
+    test_markov_chain()
+    test_reverse_words()
