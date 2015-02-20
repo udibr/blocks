@@ -11,6 +11,11 @@ from examples.markov_chain.main import main as markov_chain_test
 from examples.reverse_words import main as reverse_words_test
 from tests import silence_printing, skip_if_not_available
 
+import sys
+import Pyro4.util
+Pyro4.config.DETAILED_TRACEBACK=True
+sys.excepthook=Pyro4.util.excepthook
+
 
 @silence_printing
 def test_sqrt():

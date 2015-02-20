@@ -135,10 +135,6 @@ figure below).
 Here's how you can create a recurrent brick that encapsulate the two layers:
 
 >>> from blocks.bricks.recurrent import BaseRecurrent, recurrent
->>> import sys
->>> import Pyro4.util
->>> Pyro4.config.DETAILED_TRACEBACK=True
->>> sys.excepthook=Pyro4.util.excepthook
 >>> class FeedbackRNN(BaseRecurrent):
 ...     def __init__(self, dim, **kwargs):
 ...         super(FeedbackRNN, self).__init__(**kwargs)
