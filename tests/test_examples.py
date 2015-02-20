@@ -28,6 +28,10 @@ def test_sqrt():
 @silence_printing
 def test_mnist():
     skip_if_not_available(modules=['bokeh'])
+    import sys
+    import Pyro4.util
+    Pyro4.config.DETAILED_TRACEBACK=True
+    sys.excepthook=Pyro4.util.excepthook
     with tempfile.NamedTemporaryFile() as f:
         mnist_test(f.name, 1)
         with open(f.name, "rb") as source:
@@ -40,12 +44,20 @@ def test_mnist():
 
 @silence_printing
 def test_markov_chain():
+    import sys
+    import Pyro4.util
+    Pyro4.config.DETAILED_TRACEBACK=True
+    sys.excepthook=Pyro4.util.excepthook
     with tempfile.NamedTemporaryFile() as f:
         markov_chain_test("train", f.name, None, 10)
 
 
 @silence_printing
 def test_reverse_words():
+    import sys
+    import Pyro4.util
+    Pyro4.config.DETAILED_TRACEBACK=True
+    sys.excepthook=Pyro4.util.excepthook
     skip_if_not_available(modules=['bokeh'])
     old_limit = blocks.config.recursion_limit
     blocks.config.recursion_limit = 100000
