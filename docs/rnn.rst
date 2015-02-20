@@ -166,7 +166,11 @@ Here's how you can create a recurrent brick that encapsulate the two layers:
    :hidden:
 
    >>> def __getstate__(self):
-   ...    return {}
+   ...     import sys
+   ...     import Pyro4.util
+   ...     Pyro4.config.DETAILED_TRACEBACK=True
+   ...     sys.excepthook=Pyro4.util.excepthook
+   ...     raise ValueError
    >>> FeedbackRNN.__getstate__ = __getstate__
 
 >>> x = tensor.tensor3('x')
