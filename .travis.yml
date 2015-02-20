@@ -45,6 +45,4 @@ script:
       # Running nose2 within coverage makes imports count towards coverage
       bokeh-server &> /dev/null &
       PYTHONPATH=$PWD python tests/test_examples.py
-      coverage run --source=blocks -m nose2.__main__ -v tests
-after_script:
-  - coveralls
+      nose2 -v tests
