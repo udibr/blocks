@@ -225,16 +225,19 @@ class Sparse(NdarrayInitialization):
         return weights
 
 
-class Xavier(NdarrayInitialization):
-    """Initialize with Gaussian distribution with Xavier parameters.
+class GlorotBengio(NdarrayInitialization):
+    """Initialize parameters with Glorot-Bengio method.
 
-    Use the following gaussian parameters: mean=0 and std=sqrt(scale/Nin)
+    Use the following gaussian parameters: mean=0 and std=sqrt(scale/Nin).
+    In some circles this method is also called Xavier weight initialization.
 
 
     Parameters
     ----------
     scale : float
         1 for linear/tanh/sigmoid. 2 for RELU
+    normal : bool
+        Perform sampling from normal distribution. By defaut use uniform.
 
     Notes
     -----
@@ -245,10 +248,14 @@ class Xavier(NdarrayInitialization):
       artificial intelligence and statistics, 249-256
       http://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf
     """
-    def __init__(self, scale=1):
+    def __init__(self, scale=1, normal=False):
         self._scale = float(scale)
+        self._normal = normal
 
     def generate(self, rng, shape):
-        std = numpy.sqrt(self._scale/shape[-1])
-        m = rng.normal(0., std, size=shape)
+        w = numpy.sqrt(self._scale/shape[-1])
+        if self._normal:
+            m = rng.normal(0., w, size=shape)
+        else:
+            m = rng.uniform(-w, w, size=shape)
         return m.astype(theano.config.floatX)
