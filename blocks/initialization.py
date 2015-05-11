@@ -223,3 +223,22 @@ class Sparse(NdarrayInitialization):
                                                  replace=False)
             weights[i, random_indices] = values[i]
         return weights
+
+
+class Xavier(NdarrayInitialization):
+    """Initialize parameters from an isotropic Gaussian distribution with mean=0 and var=1/Nin
+    http://andyljones.tumblr.com/post/110998971763/an-explanation-of-xavier-initialization
+
+    Parameters
+    ----------
+    scale : float
+        1 for linear/tanh/sigmoid. 2 for RELU
+
+    """
+    def __init__(self, scale=1):
+        self._scale = float(scale)
+
+    def generate(self, rng, shape):
+        std = numpy.sqrt(self._scale/shape[-1])
+        m = rng.normal(0., std, size=shape)
+        return m.astype(theano.config.floatX)
