@@ -102,3 +102,11 @@ class MisclassificationRate(Cost):
             num_higher = higher_scoring.sum(axis=1) - 1
             mistakes = tensor.ge(num_higher, top_k)
         return mistakes.mean(dtype=theano.config.floatX)
+
+
+class BinaryMisclassificationRate(Cost):
+    @application(outputs=["error_rate"])
+    def apply(self, y, y_hat):
+        return (tensor.sum(tensor.neq(y, y_hat > 0.5)).astype(
+            theano.config.floatX) /
+                y.shape[0].astype(theano.config.floatX))
