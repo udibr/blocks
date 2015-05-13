@@ -226,7 +226,10 @@ class Sparse(NdarrayInitialization):
 
 
 class Xavier(NdarrayInitialization):
-    """Initialize parameters from an isotropic Gaussian distribution with mean=0 and var=1/Nin
+    """Initialize with Gaussian distribution with Xavier parameters.
+
+    Use the following gaussian parameters: mean=0 and var=scale/Nin
+
     http://andyljones.tumblr.com/post/110998971763/an-explanation-of-xavier-initialization
 
     Parameters
