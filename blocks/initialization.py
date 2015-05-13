@@ -230,8 +230,6 @@ class Xavier(NdarrayInitialization):
 
     Use the following gaussian parameters: mean=0 and var=scale/Nin
 
-    http://andyljones.tumblr.com/post/110998971763/an-explanation-of-xavier-initialization
-
     Parameters
     ----------
     scale : float
