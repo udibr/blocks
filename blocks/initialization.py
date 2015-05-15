@@ -228,13 +228,22 @@ class Sparse(NdarrayInitialization):
 class Xavier(NdarrayInitialization):
     """Initialize with Gaussian distribution with Xavier parameters.
 
-    Use the following gaussian parameters: mean=0 and var=scale/Nin
+    Use the following gaussian parameters: mean=0 and std=sqrt(scale/Nin)
+
 
     Parameters
     ----------
     scale : float
         1 for linear/tanh/sigmoid. 2 for RELU
 
+    Notes
+    -----
+    For more information, see [GLOROT]_.
+
+    .. [GLOROT] Glorot et al. *Understanding the difficulty of training deep
+      feedforward neural networks*, International conference on artificial
+      intelligence and statistics, 249-256
+      http://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf
     """
     def __init__(self, scale=1):
         self._scale = float(scale)
