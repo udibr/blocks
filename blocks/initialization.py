@@ -240,9 +240,9 @@ class Xavier(NdarrayInitialization):
     -----
     For more information, see [GLOROT]_.
 
-    .. [GLOROT] Glorot et al. *Understanding the difficulty of training deep
-      feedforward neural networks*, International conference on artificial
-      intelligence and statistics, 249-256
+    .. [GLOROT] Glorot et al. *Understanding the difficulty of training
+      deep feedforward neural networks*, International conference on
+      artificial intelligence and statistics, 249-256
       http://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf
     """
     def __init__(self, scale=1):
