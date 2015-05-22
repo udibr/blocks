@@ -62,7 +62,7 @@ class Parallel(Initializable):
                  **kwargs):
         super(Parallel, self).__init__(**kwargs)
         if not prototype:
-            prototype = Linear(use_bias=False)
+            prototype = Linear(use_bias=use_bias)
         if not child_prefix:
             child_prefix = "transform"
 
