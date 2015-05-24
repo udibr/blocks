@@ -230,6 +230,7 @@ class GlorotBengio(NdarrayInitialization):
 
     Use the following gaussian parameters: mean=0 and std=sqrt(scale/Nin).
     In some circles this method is also called Xavier weight initialization.
+=======
 
     Parameters
     ----------
