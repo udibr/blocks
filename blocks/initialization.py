@@ -224,10 +224,11 @@ class Sparse(NdarrayInitialization):
             weights[i, random_indices] = values[i]
         return weights
 
-class Xavier(NdarrayInitialization):
-    """Initialize with Gaussian distribution with Xavier parameters.
+class GlorotBengio(NdarrayInitialization):
+    """Initialize with Gaussian distribution with Glorot-Bengio parameters.
 
-    Use the following gaussian parameters: mean=0 and std=sqrt(scale/Nin)
+    Use the following gaussian parameters: mean=0 and std=sqrt(scale/Nin).
+    In some circles this method is also called Xavier weight initialization.
 
 
     Parameters
