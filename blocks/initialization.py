@@ -225,7 +225,7 @@ class Sparse(NdarrayInitialization):
         return weights
 
 class GlorotBengio(NdarrayInitialization):
-    """Initialize with Gaussian distribution with Glorot-Bengio parameters.
+    """Initialize parameters with Glorot-Bengio method.
 
     Use the following gaussian parameters: mean=0 and std=sqrt(scale/Nin).
     In some circles this method is also called Xavier weight initialization.
