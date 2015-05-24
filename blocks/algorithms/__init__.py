@@ -650,9 +650,7 @@ class VariableClipping(StepRule):
 
 
 class AdaGrad(StepRule):
-    """Implements the AdaGrad learning rule as described in:
-    "Adaptive subgradient methods for online learning and
-     stochastic optimization", Duchi J, Hazan E, Singer Y.
+    """Implements the AdaGrad learning rule.
 
     Parameters
     ----------
@@ -667,7 +665,10 @@ class AdaGrad(StepRule):
     -----
     For more information, see [ADAGRAD]_.
 
-    .. [ADADGRAD] http://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf
+    .. [ADADGRAD] Duchi J, Hazan E, Singer Y.,
+       *Adaptive subgradient methods for online learning and
+        stochastic optimization*,
+       http://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf
 
     """
     def __init__(self, learning_rate=0.002, epsilon=1e-6):
@@ -675,11 +676,12 @@ class AdaGrad(StepRule):
         self.epsilon = epsilon
 
     def compute_step(self, param, previous_step):
-        ssq = shared_floatx(param.get_value() * 0.)
+        ssq = shared_floatx(param.get_value() * 0.,
+                            name='ssq_' + param.name)
 
         ssq_t = (tensor.sqr(previous_step) + ssq)
         step = (self.learning_rate * previous_step /
-               (tensor.sqrt(ssq_t + 1e-6) + self.epsilon))
+                (tensor.sqrt(ssq_t) + self.epsilon))
 
         updates = [(ssq, ssq_t)]
 
