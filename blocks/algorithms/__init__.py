@@ -650,9 +650,7 @@ class VariableClipping(StepRule):
 
 
 class AdaGrad(StepRule):
-    """Implements the AdaGrad learning rule as described in:
-    "Adaptive subgradient methods for online learning and
-     stochastic optimization", Duchi J, Hazan E, Singer Y.
+    """Implements the AdaGrad learning rule.
 
     Parameters
     ----------
@@ -667,7 +665,9 @@ class AdaGrad(StepRule):
     -----
     For more information, see [ADAGRAD]_.
 
-    .. [ADADGRAD] http://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf
+    .. [ADADGRAD] "Adaptive subgradient methods for online learning and
+     stochastic optimization", Duchi J, Hazan E, Singer Y.
+     http://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf
 
     """
     def __init__(self, learning_rate=0.002, epsilon=1e-6):
