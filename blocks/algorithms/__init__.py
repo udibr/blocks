@@ -679,7 +679,7 @@ class AdaGrad(StepRule):
 
         ssq_t = (tensor.sqr(previous_step) + ssq)
         step = (self.learning_rate * previous_step /
-               (tensor.sqrt(ssq_t + 1e-6) + self.epsilon))
+                (tensor.sqrt(ssq_t + 1e-6) + self.epsilon))
 
         updates = [(ssq, ssq_t)]
 
