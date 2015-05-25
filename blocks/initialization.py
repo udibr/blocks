@@ -224,6 +224,7 @@ class Sparse(NdarrayInitialization):
             weights[i, random_indices] = values[i]
         return weights
 
+
 class GlorotBengio(NdarrayInitialization):
     """Initialize parameters with Glorot-Bengio method.
 
@@ -235,6 +236,8 @@ class GlorotBengio(NdarrayInitialization):
     ----------
     scale : float
         1 for linear/tanh/sigmoid. 2 for RELU
+    normal : bool
+        Perform sampling from normal distribution. By defaut use uniform.
 
     Notes
     -----
@@ -245,10 +248,14 @@ class GlorotBengio(NdarrayInitialization):
       artificial intelligence and statistics, 249-256
       http://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf
     """
-    def __init__(self, scale=1):
+    def __init__(self, scale=1, normal=False):
         self._scale = float(scale)
+        self._normal = normal
 
     def generate(self, rng, shape):
-        std = numpy.sqrt(self._scale/shape[-1])
-        m = rng.normal(0., std, size=shape)
+        w = numpy.sqrt(self._scale/shape[-1])
+        if self._normal:
+            m = rng.normal(0., w, size=shape)
+        else:
+            m = rng.uniform(-w, w, size=shape)
         return m.astype(theano.config.floatX)
