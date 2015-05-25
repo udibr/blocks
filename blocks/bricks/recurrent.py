@@ -9,7 +9,7 @@ import numpy
 import theano
 from theano import tensor, Variable
 
-from blocks.bricks import Initializable, Sigmoid, Tanh
+from blocks.bricks import Initializable, Sigmoid, Tanh, Linear
 from blocks.bricks.base import Application, application, Brick, lazy
 from blocks.initialization import NdarrayInitialization
 from blocks.roles import add_role, WEIGHT, INITIAL_STATE
@@ -630,3 +630,118 @@ class Bidirectional(Initializable):
     @apply.delegate
     def apply_delegate(self):
         return self.children[0].apply
+
+
+#from blocks.bricks.recurrent import BaseRecurrent, recurrent
+#import copy
+class RecurrentStack(BaseRecurrent, Initializable):
+    u"""Stack of recurrent networks.
+
+    Build a stack of Recurrent layers of the same size. The inputs are
+    feed to layer 0, the cells of each layer are also feed as input to the next
+    layer through a linear transformation with bias.
+
+    Parameters
+    ----------
+    name : str, optional
+        The name of this brick. The name of each layer will be
+        followed by the name of the prototype followed by the layer number.
+        By default, the brick receives the name of its class (lowercased).
+    depth : int, optional
+        Number of layers. By default 2.
+    prototype : :class:`~blocks.bricks.recurrent.BaseRecurrent`
+        A transformation prototype. A copy will be created for every
+        input.  If ``None``, an  LSTM is used.
+
+    Notes
+    -----
+    See :class:`.BaseRecurrent` for more initialization parameters.
+
+    """
+    def __init__(self, dim, activation=None, depth=2, name=None,
+                 prototype=None, **kwargs):
+        super(RecurrentStack, self).__init__(name=name, **kwargs)
+        self.dim = dim
+        if not prototype:
+            prototype = LSTM(dim, activation)
+        self.prototype = prototype
+        input_dim = prototype.get_dim('inputs')
+
+        self.children = []
+        self.depth = depth
+        for d in range(self.depth):
+            if d > 0:
+                layer_name = '%s_%d_%d'%(self.name,d-1,d)
+                self.children.append(Linear(dim, input_dim, use_bias=True,
+                                            name=layer_name))
+            layer_node = copy.deepcopy(self.prototype)
+            # use the name allready processed by superclass
+            layer_node.name = '%s_%s_%d'%(self.name, layer_node.name, d)
+            self.children.append(layer_node)
+
+    @recurrent(sequences=['inputs', 'mask'], states=['states', 'cells'],
+               contexts=[], outputs=['states', 'cells'])
+    def apply(self, inputs, states, cells, mask=None):
+        """Apply the stack of Long Short Term Memory transition.
+
+        Parameters
+        ----------
+        states : :class:`~tensor.TensorVariable`
+            The 2 dimensional matrix of current states in the shape
+            (batch_size, dim*depth). Required for `one_step` usage.
+        cells : :class:`~tensor.TensorVariable`
+            The 2 dimensional matrix of current cells in the shape
+            (batch_size, dim*depth). Required for `one_step` usage.
+            The cells are also used as input to the next layer thorough a
+            linear transformation with bias.
+        inputs : :class:`~tensor.TensorVariable`
+            The 2 dimensional matrix of inputs in the shape (batch_size,
+            dim * 4). The inputs are feed to layer 0.
+        mask : :class:`~tensor.TensorVariable`
+            A 1D binary array in the shape (batch,) which is 1 if there is
+            data available, 0 if not. Assumed to be 1-s only if not given.
+
+        Returns
+        -------
+        states : :class:`~tensor.TensorVariable`
+            Next states of the network.
+        cells : :class:`~tensor.TensorVariable`
+            Next cell activations of the network.
+
+        """
+        def slice_last(x, no):
+            return x.T[no*self.dim: (no+1)*self.dim].T
+
+        last_cells = None
+        next_states = []
+        next_cells = []
+        for d in range(self.depth):
+            current_states = slice_last(states,d)
+            current_cells = slice_last(cells,d)
+
+            if d == 0:
+                current_inputs = inputs
+                current_mask = mask
+            else:
+                current_inputs = self.children[2*d-1].apply(last_cells)
+                current_mask = None
+
+            current_next_states, current_next_cells = self.children[2*d].apply(
+                inputs=current_inputs,
+                states=current_states,
+                cells=current_cells,
+                mask=current_mask,
+                iterate=False)
+            next_states.append(current_next_states)
+            next_cells.append(current_next_cells)
+
+            last_cells = current_cells
+
+        next_states = theano.tensor.concatenate(next_states, axis=-1)
+        next_cells = theano.tensor.concatenate(next_cells, axis=-1)
+        return next_states, next_cells
+
+    def get_dim(self, name):
+        if name in ['inputs', 'mask']:
+            return self.children[0].get_dim(name)
+        return self.children[0].get_dim(name) * self.depth
