@@ -224,6 +224,7 @@ class Sparse(NdarrayInitialization):
             weights[i, random_indices] = values[i]
         return weights
 
+
 class GlorotBengio(NdarrayInitialization):
     """Initialize parameters with Glorot-Bengio method.
 
